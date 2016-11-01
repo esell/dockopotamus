@@ -1,4 +1,3 @@
-# This is a comment
 FROM ubuntu
 MAINTAINER esell <esell@esheavyindustries.com>
 RUN apt-get update && apt-get install -y wget vim curl rsyslog build-essential && \

@@ -49,7 +49,7 @@ func main() {
 	if err != nil {
 		log.Fatal("failed to listen for connection: ", err)
 	}
-	log.Print("Listening on 2022...")
+	log.Print("Listening on 22...")
 
 	for {
 		nConn, err := listener.Accept()
