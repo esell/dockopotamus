@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -16,7 +17,15 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
+var (
+	imageName  = flag.String("i", "esell/dockopotamus", "Docker image to use (must be pulled already)")
+	listenPort = flag.String("p", "22", "Port to listen on")
+	keyFile    = flag.String("k", "id_rsa", "Private key file to use for server")
+	logDir     = flag.String("l", "/logs", "Log directory (will be created if it doesn't exist)")
+)
+
 func main() {
+	flag.Parse()
 	// An SSH server is represented by a ServerConfig, which holds
 	// certificate details and handles authentication of ServerConns.
 	config := &ssh.ServerConfig{
@@ -31,7 +40,7 @@ func main() {
 		},
 	}
 
-	privateBytes, err := ioutil.ReadFile("id_rsa")
+	privateBytes, err := ioutil.ReadFile(*keyFile)
 	if err != nil {
 		log.Fatal("Failed to load private key: ", err)
 	}
@@ -45,11 +54,11 @@ func main() {
 
 	// Once a ServerConfig has been configured, connections can be
 	// accepted.
-	listener, err := net.Listen("tcp", "0.0.0.0:22")
+	listener, err := net.Listen("tcp", "0.0.0.0:"+*listenPort)
 	if err != nil {
 		log.Fatal("failed to listen for connection: ", err)
 	}
-	log.Print("Listening on 22...")
+	log.Print("Listening on " + *listenPort + "...")
 
 	for {
 		nConn, err := listener.Accept()
@@ -98,12 +107,12 @@ func handleChannel(newChannel ssh.NewChannel, remoteAddr string) {
 	}
 	// cleanup
 	remoteAddrClean := strings.Replace(remoteAddr, ":", "_", -1)
-	err = os.Mkdir("/logs/"+remoteAddrClean, 0777)
+	err = os.Mkdir(*logDir+"/"+remoteAddrClean, 0777)
 	if err != nil {
 		log.Println("error creating log directory: ", err)
 	}
 	//fire up our fake shell
-	bash := exec.Command("docker", "run", "-it", "--name", remoteAddrClean, "-v", "/logs/"+remoteAddrClean+":/var/log", "esell/dockopotamus", "/bin/bash")
+	bash := exec.Command("docker", "run", "-it", "--name", remoteAddrClean, "-v", *logDir+"/"+remoteAddrClean+":/var/log", *imageName, "/bin/bash")
 
 	// Prepare teardown function
 	close := func() {

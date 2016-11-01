@@ -41,5 +41,12 @@ You'll also need Docker installed and working as well as the `esell/dockopotamus
 
 Currently all Snoopy logs are set to go to `/logs` so you'll need to create that and make it writeable.
 
-Once you have all of that just run dockopotamus as root (sigh) and watch the fun roll in.
+Once you have all of that just run dockopotamus as root (sigh) and watch the fun roll in. There are a few flags you can pass in to change default values:
+
+        -i Docker image to use (must be pulled already), default is esell/dockopotamus
+        -p Port to listen on, default is 22
+        -k Private key file to use for server, default is id_rsa
+        -l Log directory (will be created if it doesn't exist), default is /logs
+
+
 
