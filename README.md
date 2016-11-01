@@ -2,6 +2,16 @@
 
 A shitty attempt at a honeypot/sandbox that uses docker
 
+
+## WARNING WARNING WARNING
+
+**This is likely poorly implemented and a potential security nightmare**
+
+**Currently this must run as root to interact with Docker**
+
+**Currently users get a container with no safeguards**
+
+
 ## What?
 
 For whatever reason I thought it would be cool to build a Go based honeypot to see what all these random bots and crackers are doing with their lives. I'm not a security person but I do like to learn so off I went.
@@ -17,17 +27,19 @@ Iteration two became just a stripped down SSH server that drops users into a new
 This lets me look at what the user was doing on the system with the additional bonus that I could then kick them off and take the container somewhere else to look at. 
 Of course there are some possible issues with this, the biggest is that the user has a "real" system which means they can kick of real attacks. 
 As much as I enjoy being part of a global botnet, I am already stretched pretty thin with regards to free time so I don't feel that I can give the bot net my all. 
-I am working on a way to limit the potential damage a user could cause from the container while still making it feel like a "real" system. One idea is to limit the outgoing bandwidth from the container so that an attack could still technically kick off, but the amount of power given to it would be very small. 
+I am working on a way to limit the potential damage a user could cause from the container while still making it feel like a "real" system (see [issue #1](https://github.com/esell/dockopotamus/issues/1)). One idea is to limit the outgoing bandwidth from the container so that an attack could still technically kick off, but the amount of power given to it would be very small. 
 At that point some logic can kick in to shut the container down. 
 
 Iteration three is currently a WIP but will focus on more of the safeguards needed to make this something you are not deathly afraid to run.
 
-## WARNING WARNING WARNING
 
-If you did not read the above wall of text please take note: **this is likely poorly implemented and a potential security nightmare**
+# How?
 
-**Currently this must run as root to interact with Docker**
+You'll need [GB](https://getgb.io/) to build so install that first. Clone this repo and then do a `gb build` from inside of it, your executable will be in `bin/`.
 
-**Currently users get a container with no safeguards**
+You'll also need Docker installed and working as well as the `esell/dockopotamus` container image so go ahead and build that with the provided Dockerfile.
 
+Currently all Snoopy logs are set to go to `/logs` so you'll need to create that and make it writeable.
+
+Once you have all of that just run dockopotamus as root (sigh) and watch the fun roll in.
 
