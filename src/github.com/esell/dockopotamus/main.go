@@ -103,7 +103,7 @@ func handleChannel(newChannel ssh.NewChannel, remoteAddr string) {
 		log.Println("error creating log directory: ", err)
 	}
 	//fire up our fake shell
-	bash := exec.Command("docker", "run", "-it", "--name", remoteAddrClean, "-v", "/logs/"+remoteAddrClean+":/var/log", "esell/potamus", "/bin/bash")
+	bash := exec.Command("docker", "run", "-it", "--name", remoteAddrClean, "-v", "/logs/"+remoteAddrClean+":/var/log", "esell/dockopotamus", "/bin/bash")
 
 	// Prepare teardown function
 	close := func() {
